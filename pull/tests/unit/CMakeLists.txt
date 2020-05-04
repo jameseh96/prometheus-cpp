@@ -1,6 +1,7 @@
 
 add_executable(prometheus_pull_test
   exposer_test.cc
+  base64_test.cc
 )
 
 target_link_libraries(prometheus_pull_test
