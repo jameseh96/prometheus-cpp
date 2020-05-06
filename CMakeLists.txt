@@ -60,6 +60,7 @@ if(ENABLE_TESTING)
   enable_testing()
 endif()
 
+find_package(string-view-lite-3rdparty REQUIRED)
 # build flags for CI system
 
 if(ENABLE_WARNINGS_AS_ERRORS AND NOT MSVC)
