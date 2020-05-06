@@ -17,3 +17,13 @@ target_link_libraries(sample_server_multi
         PRIVATE
         ${PROJECT_NAME}::pull
         )
+
+
+add_executable(sample_server_authed
+        sample_server_authed.cc
+        )
+
+target_link_libraries(sample_server_authed
+        PRIVATE
+        ${PROJECT_NAME}::pull
+        )
