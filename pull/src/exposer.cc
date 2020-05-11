@@ -4,6 +4,7 @@
 #include <string>
 #include <thread>
 
+#include "prometheus/auth/auth_handler.h"
 #include "prometheus/client_metric.h"
 #include "prometheus/detail/future_std.h"
 #include "prometheus/endpoint.h"
@@ -26,13 +27,20 @@ MultiExposer::MultiExposer(std::vector<std::string> options,
     : server_(detail::make_unique<CivetServer>(std::move(options))),
       endpoints_(std::move(endpoints)) {
   for (const auto& endpoint : endpoints_) {
-    server_->addHandler(endpoint->getURI(), endpoint->getMetricsHandler());
+    auto uri = endpoint->getURI();
+
+    auto* authHandler = endpoint->getAuthHandler();
+    if (authHandler != nullptr) {
+      server_->addAuthHandler(uri, authHandler->getCivetAuthHandler());
+    }
+    server_->addHandler(uri, endpoint->getMetricsHandler());
   }
 }
 
 MultiExposer::~MultiExposer() {
   for (const auto& endpoint : endpoints_) {
     server_->removeHandler(endpoint->getURI());
+    server_->removeAuthHandler(endpoint->getURI());
   }
 }
 

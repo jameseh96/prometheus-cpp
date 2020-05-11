@@ -1,14 +1,16 @@
 #include "prometheus/endpoint.h"
 
 #include "handler.h"
+#include "prometheus/auth/auth_handler.h"
 
 namespace prometheus {
 
-Endpoint::Endpoint(std::string uri)
+Endpoint::Endpoint(std::string uri, std::shared_ptr<AuthHandler> auth)
     : endpoint_registry_(std::make_shared<Registry>()),
       metrics_handler_(
           new detail::MetricsHandler{collectables_, *endpoint_registry_}),
-      uri_(std::move(uri)) {
+      uri_(std::move(uri)),
+      auth_handler_(std::move(auth)) {
   RegisterCollectable(endpoint_registry_);
 }
 
@@ -22,6 +24,8 @@ void Endpoint::RegisterCollectable(
 detail::MetricsHandler* Endpoint::getMetricsHandler() const {
   return metrics_handler_.get();
 }
+
+AuthHandler* Endpoint::getAuthHandler() const { return auth_handler_.get(); }
 
 const std::string& Endpoint::getURI() const { return uri_; }
 

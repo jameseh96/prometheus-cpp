@@ -14,6 +14,7 @@ if(ENABLE_COMPRESSION)
 endif()
 
 add_library(pull
+  src/auth/auth_handler.cc
   src/endpoint.cc
   src/exposer.cc
   src/handler.cc
